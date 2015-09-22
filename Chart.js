@@ -39,6 +39,7 @@
 
 		var width = this.width = computeDimension(context.canvas,'Width');
 		var height = this.height = computeDimension(context.canvas,'Height');
+		//console.log("chartjs height", height);
 
 		// Firefox requires this to work correctly
 		context.canvas.width  = width;
@@ -2136,6 +2137,7 @@
 					datasetObject.bars.push(new this.BarClass({
 						value : dataPoint,
 						label : data.labels[index],
+						record : data.records != null ? data.records[index] : void 0,
 						datasetLabel: dataset.label,
 						strokeColor : dataset.strokeColor,
 						fillColor : dataset.fillColor,
@@ -2255,13 +2257,14 @@
 
 			this.scale = new this.ScaleClass(scaleOptions);
 		},
-		addData : function(valuesArray,label){
+		addData : function(valuesArray,label, record){
 			//Map the values array for each of the datasets
 			helpers.each(valuesArray,function(value,datasetIndex){
 				//Add a new point for each piece of data, passing any required data to draw.
 				this.datasets[datasetIndex].bars.push(new this.BarClass({
 					value : value,
 					label : label,
+					record: record,
 					x: this.scale.calculateBarX(this.datasets.length, datasetIndex, this.scale.valuesCount+1),
 					y: this.scale.endPoint,
 					width : this.scale.calculateBarWidth(this.datasets.length),
@@ -2413,10 +2416,11 @@
 			},this);
 			return segmentsArray;
 		},
-		addData : function(segment, atIndex, silent){
+		addData : function(segment, atIndex, silent, record){
 			var index = atIndex || this.segments.length;
 			this.segments.splice(index, 0, new this.SegmentArc({
 				value : segment.value,
+				record : record,
 				outerRadius : (this.options.animateScale) ? 0 : this.outerRadius,
 				innerRadius : (this.options.animateScale) ? 0 : (this.outerRadius/100) * this.options.percentageInnerCutout,
 				fillColor : segment.color,
@@ -2617,6 +2621,7 @@
 					datasetObject.points.push(new this.PointClass({
 						value : dataPoint,
 						label : data.labels[index],
+						record : data.records != null ? data.records[index] : void 0,
 						datasetLabel: dataset.label,
 						strokeColor : dataset.pointStrokeColor,
 						fillColor : dataset.pointColor,
@@ -2727,7 +2732,7 @@
 
 			this.scale = new Chart.Scale(scaleOptions);
 		},
-		addData : function(valuesArray,label){
+		addData : function(valuesArray,label, record){
 			//Map the values array for each of the datasets
 
 			helpers.each(valuesArray,function(value,datasetIndex){
@@ -2735,6 +2740,7 @@
 				this.datasets[datasetIndex].points.push(new this.PointClass({
 					value : value,
 					label : label,
+					record : record,
 					x: this.scale.calculateX(this.scale.valuesCount+1),
 					y: this.scale.endPoint,
 					strokeColor : this.datasets[datasetIndex].pointStrokeColor,
@@ -3253,6 +3259,7 @@
 					datasetObject.points.push(new this.PointClass({
 						value : dataPoint,
 						label : data.labels[index],
+						record : data.records != null ? data.records[index] : void 0,
 						datasetLabel: dataset.label,
 						x: (this.options.animation) ? this.scale.xCenter : pointPosition.x,
 						y: (this.options.animation) ? this.scale.yCenter : pointPosition.y,
@@ -3371,7 +3378,7 @@
 			);
 
 		},
-		addData : function(valuesArray,label){
+		addData : function(valuesArray,label, record){
 			//Map the values array for each of the datasets
 			this.scale.valuesCount++;
 			helpers.each(valuesArray,function(value,datasetIndex){
@@ -3379,6 +3386,7 @@
 				this.datasets[datasetIndex].points.push(new this.PointClass({
 					value : value,
 					label : label,
+					record : record,
 					x: pointPosition.x,
 					y: pointPosition.y,
 					strokeColor : this.datasets[datasetIndex].pointStrokeColor,
